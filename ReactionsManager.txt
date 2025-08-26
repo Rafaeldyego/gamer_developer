@@ -1,0 +1,35 @@
+using UnityEngine;
+using System.Collections;
+
+public interface IReactionsManager
+{
+    void AtivarConfiante();
+    void AtivarMedo();
+    void AtivarRaiva();
+}
+
+/// <summary>
+/// Manages the reactions and powers of the player character "Bolt" in response to game events.
+/// Handles activation of powers such as rage (attack), fear (teleport), and confidence (speed boost),
+/// including cooldown management and visual feedback triggers.
+/// </summary>
+public class ReactionsManager : MonoBehaviour, IReactionsManager
+{
+    // Exemplo de implementação do método AtivarConfiante
+    public void AtivarConfiante()
+    {
+        Debug.Log("Bolt está confiante! Ganhando impulso de velocidade.");
+        // Implementar visual de confiança (chamas azuis nos sapatos)
+        // playerController.AplicarImpulso(forcaImpulsoConfiante);
+    }
+
+    public void AtivarMedo()
+    {
+        // Implementação do poder de medo
+    }
+
+    public void AtivarRaiva()
+    {
+        // Implementação do poder de raiva
+    }
+}

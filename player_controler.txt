@@ -1,0 +1,75 @@
+using UnityEngine;
+
+public interface IPlayerController
+{
+    void AplicarImpulso(global::System.Single forcaImpulso);
+}
+
+public interface IPlayerController1
+{
+    void AplicarImpulso(global::System.Single forcaImpulso);
+}
+
+public class PlayerController : MonoBehaviour, IPlayerController, IPlayerController1
+{
+    // Variáveis de movimento
+    public float aceleracao = 10f;
+    public float velocidadeMaxima = 20f;
+    public float forcaPulo = 10f;
+    public float velocidadeRotacao = 5f; // Para virar o carro
+
+    // Componentes
+    private Rigidbody rb;
+    private ReactionsManager reactionsManager;
+
+    // Checagem de chão para o pulo
+    public Transform checadorChao;
+    public LayerMask layerChao;
+    private bool estaNoChao;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        reactionsManager = GetComponent<ReactionsManager>();
+
+        // Se a referência não for encontrada, avisa no console
+        if (reactionsManager == null)
+        {
+            Debug.LogError("O script ReactionsManager não foi encontrado no objeto do jogador.");
+        }
+    }
+
+    void Update()
+    {
+        // Checa se o Bolt está no chão para permitir o pulo
+        estaNoChao = Physics.CheckSphere(checadorChao.position, 0.2f, layerChao);
+
+        // Input de aceleração (W ou seta para cima)
+        float acelerarInput = Input.GetAxis("Vertical");
+        Vector3 forcaAceleracao = transform.forward * acelerarInput * aceleracao;
+        rb.AddForce(forcaAceleracao);
+
+        // Limita a velocidade
+        if (rb.velocity.magnitude > velocidadeMaxima)
+        {
+            rb.velocity = rb.velocity.normalized * velocidadeMaxima;
+        }
+
+        // Input de rotação (A/D ou setas laterais)
+        float rotacaoInput = Input.GetAxis("Horizontal");
+        transform.Rotate(Vector3.up * rotacaoInput * velocidadeRotacao * Time.deltaTime);
+
+        // Input de pulo (barra de espaço)
+        if (Input.GetKeyDown(KeyCode.Space) && estaNoChao)
+        {
+            rb.AddForce(Vector3.up * forcaPulo, ForceMode.Impulse);
+            // Aqui você pode chamar a animação de pulo
+        }
+    }
+
+    // Método para aplicar impulso de velocidade (do poder "Confiante")
+    public void AplicarImpulso(float forcaImpulso)
+    {
+        rb.AddForce(transform.forward * forcaImpulso, ForceMode.Impulse);
+    }
+}

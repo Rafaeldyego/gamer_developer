@@ -1,0 +1,24 @@
+using UnityEngine;
+
+public class PowerUp : MonoBehaviour
+{
+    public enum TipoPowerUp { Impulso }
+    public TipoPowerUp tipo;
+
+    void OnTriggerEnter(Collider other)
+    {
+        // Se o objeto que colidiu for o jogador
+        if (other.CompareTag("Player"))
+        {
+            // Ativar a reação de "Confiante" no jogador
+            ReactionsManager reactionsManager = other.GetComponent<ReactionsManager>();
+            if (reactionsManager != null)
+            {
+                reactionsManager.AtivarConfiante();
+            }
+            
+            // Destruir o power-up para que ele não possa ser pego novamente
+            Destroy(gameObject);
+        }
+    }
+}
